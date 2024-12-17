@@ -5,14 +5,11 @@ import { Card, Button, Container, Col, Row, Modal, Form } from 'react-bootstrap'
 const TodoList = () => {
     const [jwt, setJwt] = useLocalState("", "jwt");
     const [todos, setTodos] = useState(null);
-    const [data, setData] = useState(null);
     const [showModal, setShowModal] = useState('')
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
 
-
-    useEffect(() => {
-
+    function fetchTodos() {
         fetch("http://localhost:8080/api/todos", {
             headers: {
                 "Content-Type": "application/json",
@@ -26,11 +23,14 @@ const TodoList = () => {
             .then((todoData) => {
                 if (JSON.stringify(todoData) !== JSON.stringify(todos)) {
                     setTodos(todoData);
+                    console.log(todoData);
                 }
             });
-        
-    }, [data]);
+    }
 
+    useEffect(() => {
+        fetchTodos();
+    },[])
 
     function createTodo(title, description) {
         const reqBody = {
@@ -51,7 +51,7 @@ const TodoList = () => {
             })
             .then((data) => {
                 console.log(data);
-                setData(data);
+                fetchTodos();
             })
     }
 
@@ -74,6 +74,29 @@ const TodoList = () => {
     }
 
 
+    function setTodoToComplete(id) {
+        const reqBody = {
+            id: id,
+        }
+
+        fetch("http://localhost:8080/api/todos/updateStatus", {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`,
+            },
+            method: "POST",
+            body: JSON.stringify(reqBody),
+        })
+            .then((response) => {
+                if (response.status === 200) return response.json() ;
+            })
+            .then((data) => {
+                console.log(data);
+                fetchTodos();
+            })
+    }
+
+
     return (
         <Container >
             <h1 className="gy-4 mt-3 mb-4">Todo List</h1>
@@ -85,7 +108,7 @@ const TodoList = () => {
                                 <Card.Body className="flex-grow-1">
                                     <Card.Title>{todo.title}</Card.Title>
                                     <Card.Text>{todo.description}</Card.Text>
-                                    <Button variant="primary" className="mt-auto">Done</Button>
+                                    <Button variant="primary" className="mt-auto" onClick={() => setTodoToComplete(todo.id)}>Done</Button>
                                 </Card.Body>
                             </Card>
                         </Col>
@@ -95,6 +118,7 @@ const TodoList = () => {
             <Row className="mt-5 mb-5 justify-content-center">
                 <Button variant="primary" onClick={() => handleShowModal()}>Create To-do</Button>
             </Row>
+
 
             <Modal show={showModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>
