@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import './App.css'
 import { useLocalState } from './util/useLocalStorage';
 import TodoList from './components/TodoList';
@@ -10,6 +10,7 @@ import { Navbar, Container, Nav} from 'react-bootstrap';
 
 function App() {
 	const [jwt, setJwt] = useLocalState("", "jwt");
+	const navigate = useNavigate();
 
 	return (
 		<div className="App">
@@ -29,6 +30,17 @@ function App() {
 						<Nav.Link href="/" style={{color: "#fff"}}>Home</Nav.Link>
 						<Nav.Link href="/todos" style={{color: "#fff"}}>Todos</Nav.Link>
 					</Nav>
+				{ jwt && 
+					<button 
+						type="button" 
+						className='btn btn-danger' 
+						onClick={() => {
+							setJwt("");
+							navigate("/")
+						}}
+					>
+							Logout
+					</button>}
 				</Container>
 			</Navbar>
 			<Routes>

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocalState } from "../../util/useLocalStorage";
 import { Card, Button, Container, Col, Row, Modal, Form } from 'react-bootstrap'
 
 const TodoList = () => {
-    const [jwt, setJwt] = useLocalState("", "jwt");
+    const [jwt] = useLocalState("", "jwt");
     const [todos, setTodos] = useState(null);
     const [showModal, setShowModal] = useState('')
     const [title, setTitle] = useState('')
@@ -23,7 +23,6 @@ const TodoList = () => {
             .then((todoData) => {
                 if (JSON.stringify(todoData) !== JSON.stringify(todos)) {
                     setTodos(todoData);
-                    console.log(todoData);
                 }
             });
     }
@@ -99,7 +98,7 @@ const TodoList = () => {
 
     return (
         <Container >
-            <h1 className="gy-4 mt-3 mb-4">Todo List</h1>
+            <h1 className="gy-4 mt-3 mb-4">Todo</h1>
             <Row >
                 {todos ? todos.map((todo) => {
                     return (
@@ -107,9 +106,15 @@ const TodoList = () => {
                             <Card className="d-flex flex-column h-100">
                                 <Card.Body className="flex-grow-1">
                                     <Card.Title>{todo.title}</Card.Title>
-                                    <Card.Text>{todo.description}</Card.Text>
-                                    <Button variant="primary" className="mt-auto" onClick={() => setTodoToComplete(todo.id)}>Done</Button>
+                                    <Card.Text
+                                        style={{whiteSpace: "pre-line"}}
+                                    >
+                                        {todo.description}
+                                    </Card.Text>
                                 </Card.Body>
+                                <Card.Footer>
+                                    <Button variant="primary" style={{width: "100%"}} onClick={() => setTodoToComplete(todo.id)}>Done</Button>
+                                </Card.Footer>
                             </Card>
                         </Col>
                     )

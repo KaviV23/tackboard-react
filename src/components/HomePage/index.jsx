@@ -1,9 +1,14 @@
-import React from 'react'
-import { Navbar, Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
 const HomePage = () => {
     return (
-        <div style={{backgroundImage: "url(../../src/assets/background.gif)", backgroundSize: "cover", backgroundRepeat: "no-repeat"}}>
+        <div 
+            style={{
+                background: "radial-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url(../../src/assets/background.gif)",
+                backgroundSize: "cover", 
+                backgroundRepeat: "no-repeat",
+            }}
+        >
             <Container fluid className="vh-100 d-flex justify-content-center align-items-center">
                 <Row className="w-100">
                     <Col xs={12} md={6} lg={4} className="mx-auto">
